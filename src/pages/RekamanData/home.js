@@ -12,7 +12,20 @@ export default function HomeRekamanData({ navigation, route }) {
     const [rekamanData, setRekamanData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null); // Menyimpan data pengguna yang sedang login
-
+    const formatTanggal = (tanggal) => {
+        const bulan = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+    
+        const dateObj = new Date(tanggal);
+        const day = dateObj.getDate();
+        const month = bulan[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+    
+        return `${day} ${month} ${year}`;
+    };
+    
     // Fungsi untuk mengambil data rekaman
     const fetchRekamanData = useCallback(() => {
         setLoading(true); // Set loading true saat fetching data
@@ -92,12 +105,12 @@ export default function HomeRekamanData({ navigation, route }) {
                                     />
                                 </View>
                                 <Text style={{ fontSize: 14, fontFamily: fonts.primary[400], color: colors.gray }}>
-                                    {new Date(rekaman.created_at).toLocaleDateString('id-ID', {
-                                        day: 'numeric',
-                                        month: 'long',
-                                        year: 'numeric'
-                                    })}
-                                </Text>
+    {formatTanggal(rekaman.created_at)}
+</Text>
+
+
+
+
                             </View>
                         ))
                     ) : (

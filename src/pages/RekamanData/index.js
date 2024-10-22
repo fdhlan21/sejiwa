@@ -18,8 +18,6 @@ export default function RekamanData({ route, navigation }) {
     const [aktivitas, setAktivitas] = useState('');
     const [selectedPolaMakan, setSelectedPolaMakan] = useState([]);
     const [selectedHasil, setSelectedHasil] = useState('Terkontrol');  // Set default nilai
-    const [showResult, setShowResult] = useState(false); // State untuk menampilkan hasil
-    const [hasilKategori, setHasilKategori] = useState('');
     const [user, setUser] = useState(null); // Tambahkan state user
     
     const [loading, setLoading] = useState(false); // Tambahkan state loading
@@ -57,19 +55,8 @@ export default function RekamanData({ route, navigation }) {
     }, []);
 
     const handleDateChange = (date) => {
-        console.log("Tanggal yang dipilih:", date);  // Debugging untuk memastikan tanggal dipilih
-    
-        // Jika date adalah string, konversi ke objek Date
-        if (typeof date === 'string') {
-            const parsedDate = new Date(date);
-            if (!isNaN(parsedDate)) {
-                setSelectedDate(parsedDate);  // Simpan tanggal yang dikonversi
-                console.log("Tanggal valid setelah dikonversi:", parsedDate);
-            } else {
-                console.error("Gagal mengonversi string ke Date:", date);
-            }
-        } else if (date instanceof Date && !isNaN(date)) {
-            setSelectedDate(date);  // Simpan tanggal yang valid
+        if (date instanceof Date && !isNaN(date)) {
+            setSelectedDate(date);
         } else {
             console.error("Tanggal tidak valid:", date);
         }
@@ -84,7 +71,6 @@ export default function RekamanData({ route, navigation }) {
             gejala_psikotik: selectedGejala.join(', '),
             kepatuhan_obat: selectedKepatuhan,
             rawat_inap: isRawatInap,
-            // Format tanggal sebelum mengirim
             tanggal_rawat_inap: tanggalRawatInapFinal ? tanggalRawatInapFinal.toISOString().split('T')[0] : null,
             aktivitas: aktivitas,
             pola_makan: selectedPolaMakan.join(', '),
@@ -101,10 +87,8 @@ export default function RekamanData({ route, navigation }) {
                     message: "Rekaman data berhasil disimpan!",
                     type: "success",
                 });
-
-                // Set kategori hasil sesuai dengan pilihan (Terkontrol/Tidak Terkontrol)
-                setHasilKategori(selectedHasil);
-                setShowResult(true); // Menampilkan hasil
+                // Lakukan navigasi ke halaman Home Rekaman Data
+                navigation.replace('HomeRekamanData', { pasienId });
             })
             .catch(error => {
                 setLoading(false);
@@ -112,39 +96,6 @@ export default function RekamanData({ route, navigation }) {
                 Alert.alert("Gagal", "Terjadi kesalahan saat menyimpan data.");
             });
     };
-
-    if (showResult) {
-        return (
-            <View style={{ flex: 1, backgroundColor: colors.background, padding: 10 }}>
-                <ScrollView>
-                    <Text style={{ fontSize: 20, fontFamily: fonts.primary[600], color: colors.primary, textAlign: "center", marginTop: 20 }}>
-                        Kamu termasuk dalam kategori:
-                    </Text>
-                    <Text style={{ fontSize: 28, fontFamily: fonts.primary[700], color: colors.primary, textAlign: "center" }}>
-                        {hasilKategori}  {/* Menampilkan hasil (Terkontrol/Tidak Terkontrol) */}
-                    </Text>
-
-                    <View style={{ padding: 20, alignItems: 'center', marginTop: '10%' }}>
-                        {hasilKategori === 'Terkontrol' ? (
-                            <Image style={{ width: 173, height: 173 }} source={require('../../assets/icon_done.png')} />
-                        ) : (
-                            <Image style={{ width: 173, height: 173 }} source={require('../../assets/not_done.png')} />
-                        )}
-                    </View>
-                </ScrollView>
-
-                <View style={{ padding: 20 }}>
-                    <TouchableWithoutFeedback onPress={() => navigation.navigate('HomeRekamanData')}>
-                        <View style={{ padding: 10, backgroundColor: colors.primary, borderRadius: 50 }}>
-                            <Text style={{ fontSize: 18, fontFamily: fonts.primary[600], color: colors.white, textAlign: 'center' }}>
-                                Selesai
-                            </Text>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
-            </View>
-        );
-    }
 
     return (
         <View style={{
@@ -202,9 +153,9 @@ export default function RekamanData({ route, navigation }) {
                             {isRawatInap === "Ya" && (
                                 <MyCalendar
                                     label="Pilih Tanggal Rawat Inap"
-                                    selectedDate={selectedDate}  // Nilai yang diambil dari state
-                                    onDateChange={handleDateChange}  // Panggil fungsi saat tanggal berubah
-                                    value={selectedDate || new Date()}  // Default ke tanggal yang dipilih atau tanggal sekarang
+                                    selectedDate={selectedDate}
+                                    onDateChange={handleDateChange}
+                                    value={selectedDate || new Date()}
                                 />
                             )}
                             <MyRadio label="Tidak" selected={isRawatInap === "Tidak"} onPress={() => { setIsRawatInap("Tidak"); setSelectedDate(null); }} />

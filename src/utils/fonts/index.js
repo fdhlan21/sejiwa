@@ -77,13 +77,13 @@ export const fonts = {
     lineHeight: 18
   },
   primary: {
-    300: 'Poppins-Light',
-    400: 'Poppins-Regular',
-    500: 'Poppins-Medium',
-    600: 'Poppins-SemiBold',
-    700: 'Poppins-Bold',
-    800: 'Poppins-ExtraBold',
-    900: 'Poppins-Black',
+    300: 'Urbanist-Light',
+    400: 'Urbanist-Regular',
+    500: 'Urbanist-Medium',
+    600: 'Urbanist-SemiBold',
+    700: 'Urbanist-Bold',
+    800: 'Urbanist-ExtraBold',
+    900: 'Urbanist-Black',
     normal: 'HammersmithOne-Regular',
   },
   secondary: {
