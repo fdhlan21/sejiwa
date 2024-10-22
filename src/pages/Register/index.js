@@ -53,7 +53,7 @@ export default function Register({ navigation, route }) {
             showMessage({
                 type:"default",
                 color: colors.white,
-                message: 'Tolong isi semua feild!',
+                message: 'Tolong isi semua field!',
                 backgroundColor: colors.danger,
             });
         } else if (kirim.namalengkap.length == 0) {
@@ -154,7 +154,7 @@ export default function Register({ navigation, route }) {
         backgroundColor:colors.background,
         flex:1
         }}>
-
+{loading && <MyLoading />}
         <ScrollView>
             <ImageBackground style={{
                 flex:1,

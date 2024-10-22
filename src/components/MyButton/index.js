@@ -29,7 +29,7 @@ export default function MyButton({
 
           marginLeft: kiri ? 1 : 0,
           marginRight: !kiri ? 5 : 0,
-          ...fonts.subheadline3,
+          fontFamily:fonts.primary[500]
           // fontWeight: fontWeight,
         }}>
         {title}

@@ -63,10 +63,11 @@ import {
   Petunjuk,
   IdentitasPasien,
   DataPasien,
-  EditDataPasien,
+  aadDataPasien,
   RekamanData,
   HomeRekamanData,
   Edukasi,
+  InfoPasien,
 
 
 
@@ -76,6 +77,7 @@ import { Icon } from 'react-native-elements';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigator } from '../components';
 import TambahTekananDarah from '../pages/TekananDarah/add';
+import addDataPasien from '../pages/IdentitasPasien/edit';
 
 
 const Tab = createBottomTabNavigator();
@@ -172,8 +174,8 @@ export default function Router() {
       />
 
 <Stack.Screen
-        name="EditDataPasien"
-        component={EditDataPasien}
+        name="addDataPasien"
+        component={addDataPasien}
         options={{
           headerShown: false,
 
@@ -209,8 +211,8 @@ export default function Router() {
       />
       
 <Stack.Screen
-        name="ProfilLupid"
-        component={ProfilLipid}
+        name="InfoPasien"
+        component={InfoPasien}
         options={{
           headerShown: false,
 

@@ -25,7 +25,10 @@ export const MYAPP = 'SEJIWA';
 export const api_token = 'd4e729bcd8aab6f0a710e8ca3d31524cb5783dd1d63ddbf32fbed278c435605f';
 export const webURL = apiURL.replace("api/", "");
 export const webPDF = apiURL.replace("api/", "assets/pdf/");
-export const registerExpress = 'http://192.168.60.76:3000/register';
-export const loginExpress = 'http://192.168.60.76:3000/login';
-export const pasien = "http://192.168.60.76:3000/pasien";
-export const getdataPasien = "http://192.168.60.76:3000/api/getDataPasien"
+export const registerExpress = 'http://192.168.60.11:3000/register';
+export const loginExpress = 'http://192.168.60.11:3000/login';
+export const pasien = "http://192.168.60.11:3000/pasien";
+export const getdataPasien = "http://192.168.60.11:3000/api/getDataPasien";
+export const rekamanDataPasien = "http://192.168.60.11:3000/api/rekamanData"
+export const getRekamanDataPasien = "http://192.168.60.11:3000/api/rekaman_data"
+

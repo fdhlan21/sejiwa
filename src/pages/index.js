@@ -58,10 +58,11 @@ import KalkulatorKompos from './KalkulatorKompos';
 import Petunjuk from './Petunjuk';
 import IdentitasPasien from './IdentitasPasien';
 import DataPasien from './IdentitasPasien/datapasien';
-import EditDataPasien from './IdentitasPasien/edit';
+import aadDataPasien from './IdentitasPasien/edit';
 import RekamanData from './RekamanData';
 import HomeRekamanData from './RekamanData/home';
 import Edukasi from './Edukasi';
+import InfoPasien from './IdentitasPasien/infopasien';
 
 
 
@@ -128,10 +129,12 @@ export {
   Petunjuk,
   IdentitasPasien,
   DataPasien,
-  EditDataPasien,
+  aadDataPasien,
   RekamanData,
   HomeRekamanData,
   Edukasi,
+  InfoPasien,
+  
   
 
 

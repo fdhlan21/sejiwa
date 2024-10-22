@@ -35,7 +35,7 @@ export default function MyInput({
   return (
     <View style={{ }}>
       <Text style={{
-        ...fonts.subheadline3,
+        fontFamily:fonts.primary[400],
         color: colors.primary,
         marginBottom: 8,
       }}>{label}</Text>

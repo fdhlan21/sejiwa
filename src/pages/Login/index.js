@@ -153,6 +153,8 @@ export default function Login({ navigation, route }) {
 
     }}>
 
+{loading && <MyLoading />}
+
     <ScrollView>
 
     <ImageBackground style={{
@@ -176,7 +178,7 @@ export default function Login({ navigation, route }) {
       }}>
 
 
-      <Text style={{fontFamily:fonts.primary[800], color:colors.primary, 
+      <Text style={{fontFamily:fonts.primary[700], color:colors.primary, 
         textAlign:'center', fontSize:30, top: -55 }}>
         Masuk
       </Text>

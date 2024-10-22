@@ -2,103 +2,72 @@ import { View, Text, SafeAreaView, ScrollView, TouchableWithoutFeedback, Alert }
 import React, { useEffect, useState } from 'react';
 import { MyCalendar, MyGap, MyHeader, MyInput, MyPicker } from '../../components';
 import { colors, fonts } from '../../utils';
-import { api_token, editPasien, getData, MYAPP, pasien, storeData, getdataPasien } from '../../utils/localStorage';
-import axios from 'axios';
+import { storeData, getData, api_token, pasien } from '../../utils/localStorage';
 import { showMessage } from 'react-native-flash-message';
+import MyLoading from '../../components/MyLoading';
+import axios from 'axios';
 
-export default function EditDataPasien({ navigation }) {
-    const [selectedDate, setSelectedDate] = useState(new Date());
+
+export default function addDataPasien({ navigation }) {
     const [kirim, setKirim] = useState({
-        user_id: '',
         api_token: api_token,
+        user_id: '', // Tambahkan user_id di state
         nama_lengkap: '',
-        jenis_kelamin: '',
-        tanggal_lahir: '',
+        jenis_kelamin: 'perempuan',
+        tanggal_lahir: new Date(),
         alamat_lengkap: '',
         diagnosis: '',
     });
-
+    const [loading, setLoading] = useState(false); // Tambahkan state loading
     useEffect(() => {
-        const __getDataPasien = async () => {
-            const user = await getData('user'); // Ambil data user yang benar
-            if (user && user.id) {
-                setKirim(prev => ({ ...prev, user_id: user.id })); // Set user_id
-                try {
-                    const response = await axios.post(getdataPasien, {
-                        user_id: user.id, // Menggunakan user_id yang benar
-                    });
-                    console.log("Data pasien response:", response.data); // Logging untuk melihat respon
-
-                    if (response.data) {
-                        const dataPasien = response.data;
-                        setKirim({
-                            user_id: user.id, // Pastikan user_id juga di-set kembali
-                            api_token: api_token,
-                            nama_lengkap: dataPasien.nama_lengkap || '',
-                            jenis_kelamin: dataPasien.jenis_kelamin || '',
-                            tanggal_lahir: dataPasien.tanggal_lahir ? new Date(dataPasien.tanggal_lahir) : '',
-                            alamat_lengkap: dataPasien.alamat_lengkap || '',
-                            diagnosis: dataPasien.diagnosis || '',
-                        });
-                    }
-                } catch (error) {
-                    console.error("Error fetching patient data:", error);
-                    showMessage({
-                        type: "default",
-                        message: 'Gagal mengambil data pasien.',
-                        backgroundColor: colors.danger,
-                    });
-                }
-            } else {
-                console.error("User not found or invalid user ID.");
-            }
-        };
-        __getDataPasien();
+        // Ambil user_id dari localStorage
+        getData('user').then(user => {
+            setKirim(prevState => ({ ...prevState, user_id: user.id })); // Simpan user_id di state
+        });
     }, []);
 
-    const handleDateChange = date => {
-        setKirim({ ...kirim, tanggal_lahir: date });
+    const handleDateChange = (date) => {
+        console.log("Tanggal yang dipilih:", date);
+        setKirim((prevState) => ({ ...prevState,  tanggal_lahir: date }));
     };
 
-    const simpanDataPasien = () => {
-        if (Object.values(kirim).some(value => value.length === 0)) {
+   const simpanDataPasien = () => {
+        // Validasi input
+        const requiredFields = ['nama_lengkap', 'alamat_lengkap', 'diagnosis'];
+        const isAllFieldsFilled = requiredFields.every(field => kirim[field] && kirim[field].length > 0);
+
+        if (!isAllFieldsFilled) {
             showMessage({
                 type: "default",
                 color: colors.white,
-                message: 'Tolong isi semua field!',
+                message: 'Tolong isi semua field yang wajib!',
                 backgroundColor: colors.danger,
             });
             return;
         }
 
-        const payload = { ...kirim };
+        // Kirim data ke server
         axios
-            .post(pasien, payload)
+            .post(pasien, kirim)
             .then(response => {
-                console.log(response.data.message);
-                if (response.status === 200) {
-                    const successMessage = response.data.message.includes("berhasil diperbarui") ? "Data berhasil diperbarui!" : "Berhasil menambahkan pasien!";
-                    showMessage({
-                        type: "default",
-                        color: colors.white,
-                        message: successMessage,
-                        backgroundColor: colors.success,
-                    });
-                    navigation.replace("DataPasien");
-                    storeData('datapasien', response.data);
-                }
+                showMessage({
+                    message: "Berhasil menambahkan pasien!",
+                    type: "success",
+                });
+                navigation.replace("DataPasien");
             })
             .catch(err => {
-                console.error(err.response.data.message);
-                Alert.alert(MYAPP, "Terjadi Kesalahan");
+                console.error(err.response?.data?.message);
+                Alert.alert("Gagal", "Terjadi kesalahan saat menyimpan data pasien.");
             });
     };
 
     return (
         <SafeAreaView style={{ flex: 1, width: "100%", height: "100%" }}>
             <View>
-                <MyHeader onPress={() => navigation.navigate("DataPasien")} title="Edit Data Pasien" />
+                <MyHeader onPress={() => navigation.navigate("DataPasien")} title="Tambah Data Pasien" />
             </View>
+            {loading && <MyLoading />}
 
             <ScrollView>
                 <View style={{ padding: 20 }}>
@@ -123,9 +92,8 @@ export default function EditDataPasien({ navigation }) {
                     <MyGap jarak={10} />
 
                     <MyCalendar
-                        label="Tanggal Lahir"
+                        label="Tanggal Lahir (Opsional)"
                         placeholder="Pilih Tanggal"
-                        date={kirim.tanggal_lahir || new Date()}
                         onDateChange={handleDateChange}
                         value={kirim.tanggal_lahir || new Date()}
                     />

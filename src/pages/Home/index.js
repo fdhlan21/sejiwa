@@ -161,7 +161,7 @@ export default function Home({ navigation, route }) {
 
           {/* MENU IDENTITAS PASIEN */}
             <View>
-              <TouchableWithoutFeedback onPress={() =>  navigation.navigate('IdentitasPasien')}>
+              <TouchableWithoutFeedback onPress={() =>  navigation.navigate('DataPasien')}>
                 <View style={{padding:10, backgroundColor:colors.background, borderRadius:30, borderWidth:5,
                 borderColor:Color.blueGray[500], flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
                   <View>

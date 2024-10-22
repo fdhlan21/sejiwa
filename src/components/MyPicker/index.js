@@ -34,7 +34,7 @@ export default function MyPicker({
       <View style={{
         backgroundColor: colors.white,
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 20,
         borderColor: Color.blueGray[300]
       }}>
         <View style={{
