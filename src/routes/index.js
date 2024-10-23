@@ -68,6 +68,7 @@ import {
   HomeRekamanData,
   Edukasi,
   InfoPasien,
+  HasilRekamanData,
 
 
 
@@ -221,8 +222,8 @@ export default function Router() {
       
 
       <Stack.Screen
-        name="LainLain"
-        component={LainLain}
+        name="HasilRekamanData"
+        component={HasilRekamanData}
         options={{
           headerShown: false,
 

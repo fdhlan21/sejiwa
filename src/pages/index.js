@@ -63,6 +63,7 @@ import RekamanData from './RekamanData';
 import HomeRekamanData from './RekamanData/home';
 import Edukasi from './Edukasi';
 import InfoPasien from './IdentitasPasien/infopasien';
+import HasilRekamanData from './RekamanData/hasil';
 
 
 
@@ -134,7 +135,7 @@ export {
   HomeRekamanData,
   Edukasi,
   InfoPasien,
-  
+  HasilRekamanData,
   
 
 

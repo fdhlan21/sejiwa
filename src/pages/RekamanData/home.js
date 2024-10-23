@@ -81,7 +81,8 @@ export default function HomeRekamanData({ navigation, route }) {
                 <View style={{ padding: 10 }}>
                     {rekamanData.length > 0 ? (
                         rekamanData.map((rekaman, index) => (
-                            <View key={index} style={{
+                            <TouchableWithoutFeedback key={index} onPress={() => navigation.navigate("HasilRekamanData" , {rekamanId: rekaman.id})}>
+                            <View style={{
                                 backgroundColor: colors.white,
                                 borderRadius: 10,
                                 padding: 15,
@@ -112,6 +113,8 @@ export default function HomeRekamanData({ navigation, route }) {
 
 
                             </View>
+                            </TouchableWithoutFeedback>
+                           
                         ))
                     ) : (
                         <Text style={{ fontSize: 16, fontFamily: fonts.primary[600], color: colors.primary, textAlign: 'center' }}>

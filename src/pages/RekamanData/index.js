@@ -16,7 +16,7 @@ export default function RekamanData({ route, navigation }) {
     const [isRawatInap, setIsRawatInap] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [aktivitas, setAktivitas] = useState('');
-    const [selectedPolaMakan, setSelectedPolaMakan] = useState([]);
+    const [selectedPolaMakan, setSelectedPolaMakan] = useState('');  // Awalnya kosong
     const [selectedHasil, setSelectedHasil] = useState('Terkontrol');  // Set default nilai
     const [user, setUser] = useState(null); // Tambahkan state user
     
@@ -30,13 +30,10 @@ export default function RekamanData({ route, navigation }) {
         }
     };
 
-    const togglePolaMakan = (value) => {
-        if (selectedPolaMakan.includes(value)) {
-            setSelectedPolaMakan(selectedPolaMakan.filter(item => item !== value));
-        } else {
-            setSelectedPolaMakan([...selectedPolaMakan, value]);
-        }
-    };
+ 
+const handlePolaMakanChange = (value) => {
+    setSelectedPolaMakan(value);  // Set langsung ke nilai yang dipilih
+};
 
     // Ambil user dari local storage
     useEffect(() => {
@@ -55,12 +52,23 @@ export default function RekamanData({ route, navigation }) {
     }, []);
 
     const handleDateChange = (date) => {
-        if (date instanceof Date && !isNaN(date)) {
-            setSelectedDate(date);
+        // Jika date adalah string, coba parsing ke objek Date
+        if (typeof date === 'string') {
+            const parsedDate = new Date(date); // Parsing string ke objek Date
+            if (!isNaN(parsedDate)) {
+                setSelectedDate(parsedDate);  // Simpan tanggal yang dikonversi
+                console.log("Tanggal valid setelah dikonversi:", parsedDate);
+            } else {
+                console.error("Gagal mengonversi string ke Date:", date);
+            }
+        } else if (date instanceof Date && !isNaN(date)) {
+            setSelectedDate(date);  // Simpan tanggal yang valid
         } else {
             console.error("Tanggal tidak valid:", date);
         }
     };
+    
+    
 
     const simpanRekamanData = () => {
         const tanggalRawatInapFinal = isRawatInap === "Ya" && !selectedDate ? new Date() : selectedDate;
@@ -73,7 +81,7 @@ export default function RekamanData({ route, navigation }) {
             rawat_inap: isRawatInap,
             tanggal_rawat_inap: tanggalRawatInapFinal ? tanggalRawatInapFinal.toISOString().split('T')[0] : null,
             aktivitas: aktivitas,
-            pola_makan: selectedPolaMakan.join(', '),
+            pola_makan: selectedPolaMakan,
             hasil: selectedHasil || 'Terkontrol',  // Pastikan hasil tidak null, default 'Terkontrol'
         };
 
@@ -143,24 +151,31 @@ export default function RekamanData({ route, navigation }) {
 
                     {/* NOMOR 3 */}
                     <View>
-                        <Text style={{
-                            fontFamily: fonts.primary[400],
-                            color: colors.primary,
-                            fontSize: 15,
-                        }}>3. Pernah Rawat Inap?</Text>
-                        <View style={{ padding: 10 }}>
-                            <MyRadio label="Ya" selected={isRawatInap === "Ya"} onPress={() => { setIsRawatInap("Ya"); setSelectedDate(null); }} />
-                            {isRawatInap === "Ya" && (
-                                <MyCalendar
-                                    label="Pilih Tanggal Rawat Inap"
-                                    selectedDate={selectedDate}
-                                    onDateChange={handleDateChange}
-                                    value={selectedDate || new Date()}
-                                />
-                            )}
-                            <MyRadio label="Tidak" selected={isRawatInap === "Tidak"} onPress={() => { setIsRawatInap("Tidak"); setSelectedDate(null); }} />
-                        </View>
-                    </View>
+    <Text style={{
+        fontFamily: fonts.primary[400],
+        color: colors.primary,
+        fontSize: 15,
+    }}>3. Pernah Rawat Inap?</Text>
+    <View style={{ padding: 10 }}>
+        <MyRadio label="Ya" selected={isRawatInap === "Ya"} onPress={() => { 
+            setIsRawatInap("Ya");
+            setSelectedDate(null); // Set null saat pertama kali memilih "Ya" agar pengguna harus memilih tanggal
+        }} />
+        {isRawatInap === "Ya" && (
+            <MyCalendar
+                label="Pilih Tanggal Rawat Inap"
+                selectedDate={selectedDate}
+                onDateChange={(date) => handleDateChange(date)}  // Memastikan fungsi handleDateChange dipanggil
+                value={selectedDate || new Date()}  // Gunakan selectedDate jika sudah dipilih, jika belum pakai tanggal saat ini
+            />
+        )}
+        <MyRadio label="Tidak" selected={isRawatInap === "Tidak"} onPress={() => { 
+            setIsRawatInap("Tidak");
+            setSelectedDate(null);  // Reset selectedDate jika memilih "Tidak"
+        }} />
+    </View>
+</View>
+
 
                     <MyGap jarak={10} />
 
@@ -178,17 +193,31 @@ export default function RekamanData({ route, navigation }) {
 
                     {/* NOMOR 5 */}
                     <View>
-                        <Text style={{
-                            fontFamily: fonts.primary[400],
-                            color: colors.primary,
-                            fontSize: 15,
-                        }}>5. Pola Makan</Text>
-                        <View style={{ padding: 10 }}>
-                            <MyRadio label="Sehari 3x" selected={selectedPolaMakan.includes("Sehari 3x")} onPress={() => togglePolaMakan("Sehari 3x")} />
-                            <MyRadio label="Sehari 2x" selected={selectedPolaMakan.includes("Sehari 2x")} onPress={() => togglePolaMakan("Sehari 2x")} />
-                            <MyRadio label="Kadang-kadang" selected={selectedPolaMakan.includes("Kadang-kadang")} onPress={() => togglePolaMakan("Kadang-kadang")} />
-                        </View>
-                    </View>
+    <Text style={{
+        fontFamily: fonts.primary[400],
+        color: colors.primary,
+        fontSize: 15,
+    }}>5. Pola Makan</Text>
+    <View style={{ padding: 10 }}>
+        {/* Radio-like functionality untuk Pola Makan */}
+        <MyRadio
+            label="Sehari 3x"
+            selected={selectedPolaMakan === "Sehari 3x"}
+            onPress={() => handlePolaMakanChange("Sehari 3x")}
+        />
+        <MyRadio
+            label="Sehari 2x"
+            selected={selectedPolaMakan === "Sehari 2x"}
+            onPress={() => handlePolaMakanChange("Sehari 2x")}
+        />
+        <MyRadio
+            label="Kadang-kadang"
+            selected={selectedPolaMakan === "Kadang-kadang"}
+            onPress={() => handlePolaMakanChange("Kadang-kadang")}
+        />
+    </View>
+</View>
+
 
                     <MyGap jarak={10} />
 
